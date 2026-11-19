@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RHA Eco-Design | Maceteros de Mortero Ecológico</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Configuración de Tailwind para Modo Oscuro y Paleta Orgánica -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        terracotta: {
+                            50: '#fbf6f3',
+                            100: '#f5eae3',
+                            500: '#c86d51',
+                            600: '#b3573c',
+                            700: '#944530',
+                        },
+                        sage: {
+                            50: '#f4f7f4',
+                            100: '#e3ebe3',
+                            500: '#4d7c5d',
+                            600: '#3d634a',
+                            700: '#31503c',
+                            800: '#274030',
+                            900: '#1f3327',
+                        },
+                        ash: {
+                            50: '#f8f8f7',
+                            100: '#efeeec',
+                            200: '#dfddd9',
+                            700: '#4a4843',
+                            800: '#32302c',
+                            900: '#1f1e1b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados mínimos para transiciones suaves y barras de progreso */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .card-hover {
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+        }
+        .progress-bar {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-ash-50 text-ash-900 dark:bg-ash-900 dark:text-ash-100 antialiased selection:bg-sage-500 selection:text-white">
+
+    <!-- Notificación Toast Flotante (Reemplazo elegante de alert) -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none max-w-sm w-full px-4">
+        <div class="bg-sage-800 dark:bg-sage-700 text-white px-5 py-4 rounded-2xl shadow-2xl border border-sage-600 flex items-center gap-3">
+            <div class="bg-sage-500/30 p-2 rounded-xl shrink-0">
+                <svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <div>
+                <p id="toast-title" class="font-semibold text-sm">¡Acción completada!</p>
+                <p id="toast-msg" class="text-xs text-sage-100 mt-0.5">Producto seleccionado en el formulario.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Navegación Superior -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-ash-50/85 dark:bg-ash-900/85 border-b border-ash-200 dark:border-ash-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-sage-600 flex items-center justify-center text-white shadow-sm group-hover:bg-sage-500 transition">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 21V11m0 0C12 7 8 4 4 4c0 4 3 7 8 7zm0 0c0-4 4-7 8-7 0 4-3 7-8 7z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-display font-bold text-lg tracking-tight block leading-none">RHA Eco-Design</span>
+                    <span class="text-[11px] font-medium text-sage-600 dark:text-emerald-400 tracking-wide uppercase">Ecuador • Economía Circular</span>
+                </div>
+            </a>
+
+            <!-- Navegación Rápida + Toggle Tema -->
+            <div class="flex items-center gap-2 sm:gap-4">
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-ash-700 dark:text-ash-200">
+                    <a href="#catalogo" class="hover:text-sage-600 dark:hover:text-emerald-400 transition">Catálogo</a>
+                    <a href="#comparativa" class="hover:text-sage-600 dark:hover:text-emerald-400 transition">Mortero RHA</a>
+                    <a href="#validacion" class="hover:text-sage-600 dark:hover:text-emerald-400 transition">Encuesta Feria</a>
+                </nav>
+
+                <!-- Botón Acceso Directo al Dashboard de Feria -->
+                <button onclick="toggleDashboard()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-sage-100 text-sage-800 dark:bg-sage-900/70 dark:text-emerald-300 border border-sage-200 dark:border-sage-700 hover:bg-sage-200 dark:hover:bg-sage-800 transition">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Resultados (<span id="nav-count">0</span>)</span>
+                </button>
+
+                <!-- Selector Modo Claro / Oscuro -->
+                <button id="theme-toggle" aria-label="Cambiar tema" class="p-2 rounded-xl bg-ash-100 dark:bg-ash-800 text-ash-700 dark:text-ash-200 hover:bg-ash-200 dark:hover:bg-ash-700 transition">
+                    <!-- Icono Sol (visible en dark) -->
+                    <svg id="icon-sun" class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    <!-- Icono Luna (visible en light) -->
+                    <svg id="icon-moon" class="w-5 h-5 block dark:hidden text-ash-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 1. HERO SECTION: PROPUESTA DE VALOR -->
+    <section class="relative overflow-hidden pt-10 pb-16 sm:pt-16 sm:pb-20 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                <!-- Columna Texto -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sage-100 dark:bg-sage-900/60 border border-sage-200 dark:border-sage-700 text-sage-800 dark:text-emerald-300 text-xs font-semibold">
+                        <span>🌱 Sesión 15 • Validación de Propuesta de Valor y Mercado</span>
+                    </div>
+
+                    <h1 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-ash-900 dark:text-white">
+                        RHA Eco-Design <br>
+                        <span class="text-sage-600 dark:text-emerald-400">Maceteros de Mortero Ecológico</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-ash-700 dark:text-ash-200 leading-relaxed">
+                        <strong>Economía circular aplicada al eco-diseño del hogar.</strong> Maceteros compactos de escritorio (ligeramente más grandes que la palma de una mano) fabricados con mortero ecológico que sustituye el <span class="font-semibold text-sage-700 dark:text-emerald-300">30% del cemento tradicional</span> por ceniza de cáscara de arroz (RHA) proveniente de piladoras locales de <em>Guayas y Los Ríos</em>. Diseño sólido, micro-poroso y <span class="font-semibold">20% más liviano</span> que el concreto tradicional.
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <a href="#catalogo" class="px-6 py-3.5 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-semibold text-sm shadow-lg shadow-sage-600/20 transition inline-flex items-center gap-2">
+                            <span>Explorar Catálogo</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </a>
+                        <a href="#validacion" class="px-6 py-3.5 rounded-2xl bg-white dark:bg-ash-800 hover:bg-ash-100 dark:hover:bg-ash-700 text-ash-900 dark:text-white font-semibold text-sm border border-ash-200 dark:border-ash-700 transition inline-flex items-center gap-2">
+                            <span>Participar en Validación (3 Preguntas)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Columna Tarjetas de Impacto Ambiental y Técnico -->
+                <div class="lg:col-span-5 grid grid-cols-2 gap-3.5 sm:gap-4">
+                    <!-- Indicador 1 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200/80 dark:border-ash-700 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-sage-100 dark:bg-sage-900/70 text-sage-600 dark:text-emerald-400 flex items-center justify-center mb-3 font-bold text-lg">
+                            -30%
+                        </div>
+                        <p class="font-display font-bold text-lg sm:text-xl text-ash-900 dark:text-white">-30% Cemento Portland</p>
+                        <p class="text-xs text-ash-700 dark:text-ash-200 mt-1">Sustitución activa por ceniza puzolánica de cascarilla de arroz (RHA).</p>
+                    </div>
+
+                    <!-- Indicador 2 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200/80 dark:border-ash-700 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"></path></svg>
+                        </div>
+                        <p class="font-display font-bold text-lg sm:text-xl text-ash-900 dark:text-white">-25.5 kg CO₂</p>
+                        <p class="text-xs text-ash-700 dark:text-ash-200 mt-1">Emisiones evitadas por cada 100 kg de mezcla cementante producida.</p>
+                    </div>
+
+                    <!-- Indicador 3 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200/80 dark:border-ash-700 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-terracotta-100 dark:bg-terracotta-700/30 text-terracotta-600 dark:text-orange-300 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <p class="font-display font-bold text-lg sm:text-xl text-ash-900 dark:text-white">Ultra-Liviano</p>
+                        <p class="text-xs text-ash-700 dark:text-ash-200 mt-1">Hasta 20% menos peso que el concreto tradicional, fácil de reubicar.</p>
+                    </div>
+
+                    <!-- Indicador 4 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200/80 dark:border-ash-700 shadow-sm">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </div>
+                        <p class="font-display font-bold text-lg sm:text-xl text-ash-900 dark:text-white">Origen Local</p>
+                        <p class="text-xs text-ash-700 dark:text-ash-200 mt-1">Residuos valorizados de piladoras de Guayas y Los Ríos (0.5 kg RHA/maceta).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. CATÁLOGO INTERACTIVO DE PRODUCTOS -->
+    <section id="catalogo" class="py-14 px-4 sm:px-6 bg-white dark:bg-ash-800/50 border-y border-ash-200 dark:border-ash-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-wider text-sage-600 dark:text-emerald-400">Vitrina de Eco-Diseño • Formato Compacto</span>
+                <h2 class="font-display text-2xl sm:text-4xl font-bold mt-1">Catálogo de Prototipos y Acabados</h2>
+                <p class="text-sm sm:text-base text-ash-700 dark:text-ash-200 mt-2">
+                    Maceteros de escritorio (~10–12 cm, ideales para suculentas, cactus o plantas pequeñas). Selecciona el modelo o presentación que más te atraiga para evaluarlo en nuestra prueba de mercado.
+                </p>
+            </div>
+
+            <!-- Grid de 3 Productos -->
+            <div class="grid md:grid-cols-3 gap-6 lg:gap-8">
+                
+                <!-- PRODUCTO 1: Cilíndrico Minimalista Pintado -->
+                <article class="card-hover flex flex-col justify-between rounded-3xl bg-ash-50 dark:bg-ash-800 border border-ash-200 dark:border-ash-700 overflow-hidden shadow-sm">
+                    <div>
+                        <!-- Ilustración SVG -->
+                        <div class="h-56 bg-gradient-to-br from-terracotta-50 to-sage-50 dark:from-ash-900 dark:to-sage-900/40 flex items-center justify-center p-6 relative">
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-semibold bg-terracotta-600 text-white shadow-sm">
+                                Diseño Pintado a Mano
+                            </span>
+                            <!-- SVG Macetero Cilíndrico Decorado -->
+                            <svg class="w-40 h-40 drop-shadow-md" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Planta Suculenta -->
+                                <path d="M90 68C90 45 72 32 62 36C68 50 76 60 90 68Z" fill="#4D7C5D"/>
+                                <path d="M90 68C90 45 108 32 118 36C112 50 104 60 90 68Z" fill="#3D634A"/>
+                                <path d="M90 68C90 38 90 22 90 22C82 36 82 52 90 68Z" fill="#639A76"/>
+                                <path d="M84 68C70 55 52 54 48 60C58 66 70 68 84 68Z" fill="#31503C"/>
+                                <path d="M96 68C110 55 128 54 132 60C122 66 110 68 96 68Z" fill="#4D7C5D"/>
+                                <!-- Cuerpo Cilíndrico -->
+                                <rect x="48" y="68" width="84" height="82" rx="10" fill="#E6E2DC"/>
+                                <!-- Franja Decorativa Pigmento Terracota -->
+                                <path d="M48 112H132V140C132 145.523 127.523 150 122 150H58C52.4772 150 48 145.523 48 140V112Z" fill="#C86D51"/>
+                                <!-- Detalles Geométricos Pintados -->
+                                <circle cx="72" cy="92" r="5" fill="#4D7C5D"/>
+                                <circle cx="90" cy="92" r="5" fill="#C86D51"/>
+                                <circle cx="108" cy="92" r="5" fill="#4D7C5D"/>
+                                <!-- Borde superior -->
+                                <rect x="45" y="65" width="90" height="8" rx="4" fill="#D5CFC7"/>
+                                <!-- Sombra base -->
+                                <ellipse cx="90" cy="154" rx="44" ry="5" fill="#000000" fill-opacity="0.1"/>
+                            </svg>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-display font-bold text-lg text-ash-900 dark:text-white">Modelo Cilíndrico Minimalista</h3>
+                                <span class="font-display font-extrabold text-xl text-sage-700 dark:text-emerald-400 shrink-0">$7.00</span>
+                            </div>
+                            <p class="text-xs font-medium text-terracotta-600 dark:text-orange-300 mt-1">Acabado decorativo • Pigmentos minerales</p>
+                            <p class="text-sm text-ash-700 dark:text-ash-200 mt-3 leading-relaxed">
+                                Formato compacto de escritorio listo para decorar interiores. Acabado liso sellado con diseños geométricos pintados a mano utilizando pigmentos minerales no tóxicos.
+                            </p>
+
+                            <!-- Especificaciones -->
+                            <div class="mt-4 pt-4 border-t border-ash-200 dark:border-ash-700 grid grid-cols-2 gap-2 text-xs text-ash-700 dark:text-ash-200">
+                                <div><span class="font-semibold">Tamaño:</span> Compacto (~11 × 11 cm)</div>
+                                <div><span class="font-semibold">Peso RHA:</span> ~0.55 kg (-20%)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <button onclick="selectProduct('A', 'Modelo Cilíndrico Minimalista ($7.00)')" class="w-full py-3 px-4 rounded-2xl bg-ash-900 dark:bg-sage-600 hover:bg-sage-700 dark:hover:bg-sage-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2">
+                            <span>Me interesa / Seleccionar</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- PRODUCTO 2: Hexagonal Geométrico Natural -->
+                <article class="card-hover flex flex-col justify-between rounded-3xl bg-ash-50 dark:bg-ash-800 border border-ash-200 dark:border-ash-700 overflow-hidden shadow-sm">
+                    <div>
+                        <!-- Ilustración SVG -->
+                        <div class="h-56 bg-gradient-to-br from-sage-100 to-ash-200 dark:from-ash-900 dark:to-ash-800 flex items-center justify-center p-6 relative">
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-semibold bg-sage-700 text-white shadow-sm">
+                                Rústico Micro-Poroso
+                            </span>
+                            <!-- SVG Macetero Hexagonal Natural -->
+                            <svg class="w-40 h-40 drop-shadow-md" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Planta Monstera / Hojas -->
+                                <path d="M90 70C75 45 55 42 50 52C58 62 72 68 90 70Z" fill="#3D634A"/>
+                                <path d="M90 70C105 42 126 40 132 50C122 62 108 68 90 70Z" fill="#4D7C5D"/>
+                                <path d="M90 70C85 40 92 24 100 26C102 40 96 56 90 70Z" fill="#639A76"/>
+                                <!-- Cuerpo Hexagonal Facetado (Tono Ceniza Natural RHA) -->
+                                <polygon points="44,72 90,64 136,72 126,148 90,154 54,148" fill="#A8A39B"/>
+                                <!-- Faceta Izquierda Luz -->
+                                <polygon points="44,72 72,76 76,151 54,148" fill="#B8B3AB"/>
+                                <!-- Faceta Derecha Sombra -->
+                                <polygon points="108,76 136,72 126,148 104,151" fill="#8F8A82"/>
+                                <!-- Textura Micro-poros -->
+                                <circle cx="84" cy="96" r="1.5" fill="#5C5852"/>
+                                <circle cx="96" cy="112" r="1.8" fill="#5C5852"/>
+                                <circle cx="88" cy="130" r="1.4" fill="#5C5852"/>
+                                <circle cx="64" cy="108" r="1.5" fill="#5C5852"/>
+                                <circle cx="116" cy="118" r="1.5" fill="#5C5852"/>
+                                <!-- Sombra base -->
+                                <ellipse cx="90" cy="157" rx="42" ry="5" fill="#000000" fill-opacity="0.12"/>
+                            </svg>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-display font-bold text-lg text-ash-900 dark:text-white">Modelo Hexagonal Rústico Natural</h3>
+                                <span class="font-display font-extrabold text-xl text-sage-700 dark:text-emerald-400 shrink-0">$5.00</span>
+                            </div>
+                            <p class="text-xs font-medium text-sage-600 dark:text-emerald-300 mt-1">Acabado natural sin pintar • Transpiración radicular</p>
+                            <p class="text-sm text-ash-700 dark:text-ash-200 mt-3 leading-relaxed">
+                                Estética arquitectónica compacta en tono gris ceniza natural de la RHA. Su estructura micro-porosa regula la humedad y oxigena las raíces de suculentas y cactus.
+                            </p>
+
+                            <!-- Especificaciones -->
+                            <div class="mt-4 pt-4 border-t border-ash-200 dark:border-ash-700 grid grid-cols-2 gap-2 text-xs text-ash-700 dark:text-ash-200">
+                                <div><span class="font-semibold">Tamaño:</span> Compacto (~10 × 10 cm)</div>
+                                <div><span class="font-semibold">Peso RHA:</span> ~0.48 kg (-22%)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <button onclick="selectProduct('C', 'Modelo Hexagonal Rústico Natural ($5.00)')" class="w-full py-3 px-4 rounded-2xl bg-ash-900 dark:bg-sage-600 hover:bg-sage-700 dark:hover:bg-sage-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2">
+                            <span>Me interesa / Seleccionar</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- PRODUCTO 3: Kit DIY Co-creación -->
+                <article class="card-hover flex flex-col justify-between rounded-3xl bg-ash-50 dark:bg-ash-800 border-2 border-sage-500/70 dark:border-emerald-500/50 overflow-hidden shadow-md relative">
+                    <div>
+                        <!-- Ilustración SVG -->
+                        <div class="h-56 bg-gradient-to-br from-emerald-50 via-terracotta-50 to-amber-50 dark:from-sage-900/50 dark:to-ash-900 flex items-center justify-center p-6 relative">
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-600 text-white shadow-sm">
+                                ★ Experiencia Co-Creación DIY
+                            </span>
+                            <!-- SVG Kit DIY Macetero + 3 Potecitos de Pintura + 1 Pincel -->
+                            <svg class="w-44 h-40 drop-shadow-md" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Macetero Base Natural -->
+                                <polygon points="40,74 116,74 106,148 50,148" fill="#B5B0A8"/>
+                                <polygon points="40,74 78,74 78,148 50,148" fill="#C4BFB7"/>
+                                <rect x="36" y="68" width="84" height="8" rx="4" fill="#9E9991"/>
+                                <!-- 3 Potecitos Pequeños de Pintura Ecológica -->
+                                <rect x="128" y="106" width="16" height="19" rx="3" fill="#C86D51"/>
+                                <rect x="127" y="102" width="18" height="4" rx="2" fill="#32302C"/>
+                                <rect x="150" y="106" width="16" height="19" rx="3" fill="#4D7C5D"/>
+                                <rect x="149" y="102" width="18" height="4" rx="2" fill="#32302C"/>
+                                <rect x="139" y="128" width="16" height="19" rx="3" fill="#D99B26"/>
+                                <rect x="138" y="124" width="18" height="4" rx="2" fill="#32302C"/>
+                                <!-- 1 Pincel -->
+                                <line x1="136" y1="95" x2="164" y2="48" stroke="#8C5A3C" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M164 48L169 39C171 41 170 46 166 50L164 48Z" fill="#C86D51"/>
+                                <!-- Sombra -->
+                                <ellipse cx="102" cy="154" rx="68" ry="5" fill="#000000" fill-opacity="0.1"/>
+                            </svg>
+                        </div>
+
+                        <div class="p-6">
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 class="font-display font-bold text-lg text-ash-900 dark:text-white">Kit "Hágalo Usted Mismo" (DIY)</h3>
+                                <span class="font-display font-extrabold text-xl text-sage-700 dark:text-emerald-400 shrink-0">$8.00</span>
+                            </div>
+                            <p class="text-xs font-medium text-amber-700 dark:text-amber-300 mt-1">Macetero compacto + 3 potecitos de pintura + 1 pincel</p>
+                            <p class="text-sm text-ash-700 dark:text-ash-200 mt-3 leading-relaxed">
+                                Personaliza tu propio macetero ecológico a tu gusto. Incluye 1 macetero compacto sin pintar en tono natural RHA, 3 potecitos pequeños de pintura acrílica ecológica y 1 pincel.
+                            </p>
+
+                            <!-- Especificaciones -->
+                            <div class="mt-4 pt-4 border-t border-ash-200 dark:border-ash-700 grid grid-cols-2 gap-2 text-xs text-ash-700 dark:text-ash-200">
+                                <div><span class="font-semibold">Incluye:</span> Maceta + 3 potes + 1 pincel</div>
+                                <div><span class="font-semibold">Ideal para:</span> Regalo / Creatividad</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-6 pb-6">
+                        <button onclick="selectProduct('B', 'Kit Hágalo Usted Mismo DIY ($8.00)')" class="w-full py-3 px-4 rounded-2xl bg-sage-600 hover:bg-sage-700 text-white font-semibold text-sm shadow-md shadow-sage-600/20 transition flex items-center justify-center gap-2">
+                            <span>Quiero personalizar (Kit DIY)</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN COMPARATIVA: MORTERO TRADICIONAL VS MORTERO RHA -->
+    <section id="comparativa" class="py-14 px-4 sm:px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-bold uppercase tracking-wider text-terracotta-600 dark:text-orange-300">Innovación en Materiales</span>
+                <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Mortero Tradicional vs. Mortero Ecológico RHA</h2>
+                <p class="text-sm text-ash-700 dark:text-ash-200 mt-2">
+                    ¿Por qué nuestro compuesto con 30% de ceniza de cascarilla de arroz supera al concreto convencional en eco-diseño?
+                </p>
+            </div>
+
+            <div class="overflow-x-auto rounded-3xl border border-ash-200 dark:border-ash-700 bg-white dark:bg-ash-800 shadow-sm">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-ash-200 dark:border-ash-700 bg-ash-100/70 dark:bg-ash-900/60 text-xs uppercase tracking-wider">
+                            <th class="py-4 px-5 font-bold text-ash-700 dark:text-ash-200">Atributo / Impacto</th>
+                            <th class="py-4 px-5 font-bold text-ash-700 dark:text-ash-200">Mortero Tradicional (100% Cemento)</th>
+                            <th class="py-4 px-5 font-bold text-sage-700 dark:text-emerald-400 bg-sage-50/70 dark:bg-sage-900/30">Mortero RHA Eco-Design (30% Ceniza)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-ash-200 dark:divide-ash-700 text-sm">
+                        <tr>
+                            <td class="py-4 px-5 font-semibold">Peso del Producto</td>
+                            <td class="py-4 px-5 text-ash-700 dark:text-ash-300">Pesado y difícil de mover en interiores o balcones.</td>
+                            <td class="py-4 px-5 font-medium text-sage-800 dark:text-emerald-300 bg-sage-50/40 dark:bg-sage-900/20">15% a 25% más liviano gracias a la baja densidad de la RHA.</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-5 font-semibold">Huella de Carbono (CO₂)</td>
+                            <td class="py-4 px-5 text-ash-700 dark:text-ash-300">Alta emisión (~0.85 kg CO₂ por kg de cemento usado).</td>
+                            <td class="py-4 px-5 font-medium text-sage-800 dark:text-emerald-300 bg-sage-50/40 dark:bg-sage-900/20">Reducción directa del 30% de cemento Portland (-25.5 kg CO₂ / 100 kg mezcla).</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-5 font-semibold">Salud de la Planta</td>
+                            <td class="py-4 px-5 text-ash-700 dark:text-ash-300">Baja transpiración; retiene exceso de calor y humedad.</td>
+                            <td class="py-4 px-5 font-medium text-sage-800 dark:text-emerald-300 bg-sage-50/40 dark:bg-sage-900/20">Estructura micro-porosa que favorece la aireación radicular.</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-5 font-semibold">Origen de Materias Primas</td>
+                            <td class="py-4 px-5 text-ash-700 dark:text-ash-300">Extracción minera intensiva (clínker y áridos).</td>
+                            <td class="py-4 px-5 font-medium text-sage-800 dark:text-emerald-300 bg-sage-50/40 dark:bg-sage-900/20">Economía circular: valoriza cascarilla de piladoras de Guayas y Los Ríos.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. FORMULARIO DE VALIDACIÓN DE MERCADO (3 PREGUNTAS CLAVE) -->
+    <section id="validacion" class="py-14 px-4 sm:px-6 bg-sage-50/70 dark:bg-ash-800/40 border-t border-ash-200 dark:border-ash-800">
+        <div class="max-w-3xl mx-auto">
+            <div class="bg-white dark:bg-ash-800 rounded-3xl border border-ash-200 dark:border-ash-700 shadow-xl p-6 sm:p-10">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-6 border-b border-ash-200 dark:border-ash-700">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-sage-600 dark:text-emerald-400">Feria de Emprendimiento • Test Rápido</span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-bold mt-1">Tu opinión construye nuestro producto</h2>
+                        <p class="text-sm text-ash-700 dark:text-ash-200 mt-1">Responde estas 3 preguntas breves (toma menos de 45 segundos).</p>
+                    </div>
+                    <div id="selected-badge" class="hidden px-3.5 py-2 rounded-2xl bg-terracotta-50 dark:bg-terracotta-700/30 border border-terracotta-500/30 text-xs font-semibold text-terracotta-700 dark:text-orange-200">
+                        Interés: <span id="selected-product-name">Ninguno</span>
+                    </div>
+                </div>
+
+                <form id="validation-form" class="space-y-8 mt-6">
+                    
+                    <!-- PREGUNTA 1: Preferencia de Presentación (Prueba 1 y 2) -->
+                    <div class="space-y-3">
+                        <label class="block font-display font-bold text-base sm:text-lg text-ash-900 dark:text-white">
+                            1. ¿Cuál presentación prefieres y estarías más dispuesto(a) a comprar hoy? <span class="text-terracotta-600">*</span>
+                        </label>
+                        <p class="text-xs text-ash-700 dark:text-ash-300">Evalúa el atractivo visual frente a la opción de co-creación.</p>
+                        
+                        <div class="grid sm:grid-cols-2 gap-3 pt-1">
+                            <label class="cursor-pointer relative flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 dark:hover:border-emerald-400 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q1" value="A" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>A.</strong> Macetero cilíndrico con diseño ya pintado ($7.00)</span>
+                            </label>
+
+                            <label class="cursor-pointer relative flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 dark:hover:border-emerald-400 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q1" value="B" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>B.</strong> Kit DIY (macetero + 3 potecitos de pintura + 1 pincel) ($8.00)</span>
+                            </label>
+
+                            <label class="cursor-pointer relative flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 dark:hover:border-emerald-400 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q1" value="C" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>C.</strong> Modelo hexagonal rústico natural sin pintar ($5.00)</span>
+                            </label>
+
+                            <label class="cursor-pointer relative flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 dark:hover:border-emerald-400 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q1" value="D" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>D.</strong> Ninguno por el momento</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- PREGUNTA 2: Percepción de Precio (Prueba 2) -->
+                    <div class="space-y-3">
+                        <label class="block font-display font-bold text-base sm:text-lg text-ash-900 dark:text-white">
+                            2. Respecto a los precios referenciales ($5.00 natural, $7.00 pintado y $8.00 Kit DIY), ¿cómo percibes la relación tamaño-precio? <span class="text-terracotta-600">*</span>
+                        </label>
+
+                        <div class="grid sm:grid-cols-2 gap-3 pt-1">
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q2" value="A" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>A.</strong> Muy justo y accesible</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q2" value="B" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>B.</strong> Adecuado por ser un producto ecológico y de diseño</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q2" value="C" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>C.</strong> Un poco elevado, pagaría un poco menos</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q2" value="D" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>D.</strong> Caro</span>
+                            </label>
+                        </div>
+
+                        <!-- Campo opcional de precio sugerido -->
+                        <div class="pt-2">
+                            <label for="custom-price" class="block text-xs font-semibold text-ash-700 dark:text-ash-300 mb-1.5">
+                                Opcional: ¿Cuánto estarías dispuesto(a) a pagar por tu opción favorita? ($ USD)
+                            </label>
+                            <div class="relative max-w-xs">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-ash-700 dark:text-ash-300 font-semibold text-sm">$</span>
+                                <input type="number" id="custom-price" name="customPrice" step="0.50" min="1" max="100" placeholder="Ej. 6.50" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-ash-200 dark:border-ash-700 bg-ash-50 dark:bg-ash-900 text-sm focus:ring-2 focus:ring-sage-500 focus:border-sage-500 outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PREGUNTA 3: Impacto de Sostenibilidad y Percepción de Calidad (Prueba 3) -->
+                    <div class="space-y-3">
+                        <label class="block font-display font-bold text-base sm:text-lg text-ash-900 dark:text-white">
+                            3. ¿Qué tanto influye en tu decisión saber que está hecho con ceniza de cascarilla de arroz (residuo agroindustrial) y qué percepción te da el material? <span class="text-terracotta-600">*</span>
+                        </label>
+
+                        <div class="space-y-2.5 pt-1">
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q3" value="A" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>A.</strong> Influye muy positivamente; se siente sólido y de alta calidad</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q3" value="B" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>B.</strong> Influye positivamente, aunque me gustaría confirmar su durabilidad</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q3" value="C" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>C.</strong> Me es indiferente; lo compraría solo por el diseño</span>
+                            </label>
+
+                            <label class="cursor-pointer flex items-start gap-3 p-4 rounded-2xl border border-ash-200 dark:border-ash-700 hover:border-sage-500 bg-ash-50/50 dark:bg-ash-900/40 transition">
+                                <input type="radio" name="q3" value="D" required class="mt-1 w-4 h-4 text-sage-600 focus:ring-sage-500">
+                                <span class="text-sm"><strong>D.</strong> Desconfío de que esté hecho con residuos</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Envío -->
+                    <div class="pt-2">
+                        <button type="submit" id="submit-btn" class="w-full py-4 px-6 rounded-2xl bg-sage-600 hover:bg-sage-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-display font-bold text-base shadow-lg shadow-sage-600/25 transition flex items-center justify-center gap-2">
+                            <svg id="submit-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span id="submit-text">Registrar Respuesta de Validación</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. PANEL DE RESULTADOS EN VIVO (DASHBOARD DE FERIA) -->
+    <section id="dashboard-section" class="py-12 px-4 sm:px-6 border-t border-ash-200 dark:border-ash-800 bg-ash-100/70 dark:bg-ash-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sage-700 dark:text-emerald-400">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                        <span>Panel de Control para el Equipo • Sesión 15</span>
+                    </div>
+                    <h2 class="font-display text-2xl font-bold mt-1">Resultados de Validación en Vivo</h2>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2.5">
+                    <button onclick="toggleDashboard()" id="btn-toggle-dash" class="px-4 py-2.5 rounded-xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 text-xs font-semibold hover:bg-ash-50 dark:hover:bg-ash-700 transition">
+                        Ocultar Panel
+                    </button>
+                    <button onclick="exportCSV()" class="px-4 py-2.5 rounded-xl bg-sage-600 hover:bg-sage-700 text-white text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Exportar CSV</span>
+                    </button>
+                    <button onclick="requestResetData()" class="px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/60 text-xs font-semibold hover:bg-red-100 dark:hover:bg-red-900/50 transition">
+                        Reiniciar Datos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Confirmación inline para reiniciar datos (sin usar confirm()) -->
+            <div id="reset-confirm-box" class="hidden mb-6 p-4 rounded-2xl bg-red-50 dark:bg-red-950/60 border border-red-300 dark:border-red-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p class="text-sm text-red-800 dark:text-red-200 font-medium">
+                    ¿Estás seguro de eliminar todas las respuestas almacenadas en este dispositivo? Esta acción no se puede deshacer.
+                </p>
+                <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="cancelResetData()" class="px-3.5 py-2 rounded-xl bg-white dark:bg-ash-800 text-xs font-semibold border border-ash-200 dark:border-ash-700">Cancelar</button>
+                    <button onclick="confirmResetData()" class="px-3.5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold">Sí, borrar todo</button>
+                </div>
+            </div>
+
+            <!-- Contenedor Colapsable del Dashboard -->
+            <div id="dashboard-content" class="space-y-6">
+                <!-- 4 Tarjetas KPI comparadas con las metas del Plan de Validación -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- KPI 1: Total Encuestados -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 shadow-sm">
+                        <p class="text-xs font-semibold text-ash-700 dark:text-ash-300 uppercase">Total Encuestados</p>
+                        <p id="kpi-total" class="font-display text-3xl font-extrabold mt-2 text-ash-900 dark:text-white">0</p>
+                        <p class="text-xs text-ash-700 dark:text-ash-300 mt-1">Validaciones registradas en feria</p>
+                    </div>
+
+                    <!-- KPI 2: Interés en Kit DIY (Meta >= 30%) -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-ash-700 dark:text-ash-300 uppercase">Interés Kit DIY (P2)</p>
+                            <span id="badge-diy" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-ash-100 dark:bg-ash-700 text-ash-700 dark:text-ash-200">Meta: ≥30%</span>
+                        </div>
+                        <p id="kpi-diy" class="font-display text-3xl font-extrabold mt-2 text-amber-600 dark:text-amber-400">0%</p>
+                        <div class="w-full bg-ash-200 dark:bg-ash-700 h-2 rounded-full mt-2.5 overflow-hidden">
+                            <div id="bar-diy" class="progress-bar bg-amber-500 h-full rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- KPI 3: Factor Ecológico Positivo (Meta >= 70%) -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-ash-700 dark:text-ash-300 uppercase">Impacto Eco Positivo (P3)</p>
+                            <span id="badge-eco" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-ash-100 dark:bg-ash-700 text-ash-700 dark:text-ash-200">Meta: ≥70%</span>
+                        </div>
+                        <p id="kpi-eco" class="font-display text-3xl font-extrabold mt-2 text-sage-600 dark:text-emerald-400">0%</p>
+                        <div class="w-full bg-ash-200 dark:bg-ash-700 h-2 rounded-full mt-2.5 overflow-hidden">
+                            <div id="bar-eco" class="progress-bar bg-sage-600 dark:bg-emerald-500 h-full rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- KPI 4: Precio Justo / Adecuado -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-semibold text-ash-700 dark:text-ash-300 uppercase">Precio Justo/Adecuado</p>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-sage-100 dark:bg-sage-900/60 text-sage-800 dark:text-emerald-300">P2</span>
+                        </div>
+                        <p id="kpi-price" class="font-display text-3xl font-extrabold mt-2 text-terracotta-600 dark:text-orange-400">0%</p>
+                        <p id="kpi-avg-price" class="text-xs text-ash-700 dark:text-ash-300 mt-1">Precio sugerido prom.: --</p>
+                    </div>
+                </div>
+
+                <!-- Desglose Detallado por Pregunta -->
+                <div class="grid md:grid-cols-3 gap-4">
+                    <!-- Desglose Q1 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700">
+                        <h3 class="font-display font-bold text-sm mb-3">1. Preferencia de Presentación</h3>
+                        <ul id="breakdown-q1" class="space-y-2 text-xs text-ash-700 dark:text-ash-200">
+                            <li class="flex justify-between"><span>A. Pintado decorativo:</span> <strong id="q1-a">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>B. Kit DIY personalizar:</span> <strong id="q1-b">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>C. Rústico natural:</span> <strong id="q1-c">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>D. Ninguno por ahora:</span> <strong id="q1-d">0 (0%)</strong></li>
+                        </ul>
+                    </div>
+
+                    <!-- Desglose Q2 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700">
+                        <h3 class="font-display font-bold text-sm mb-3">2. Percepción de Precio</h3>
+                        <ul id="breakdown-q2" class="space-y-2 text-xs text-ash-700 dark:text-ash-200">
+                            <li class="flex justify-between"><span>A. Muy justo y accesible:</span> <strong id="q2-a">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>B. Adecuado (eco/diseño):</span> <strong id="q2-b">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>C. Un poco elevado:</span> <strong id="q2-c">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>D. Caro:</span> <strong id="q2-d">0 (0%)</strong></li>
+                        </ul>
+                    </div>
+
+                    <!-- Desglose Q3 -->
+                    <div class="p-5 rounded-3xl bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700">
+                        <h3 class="font-display font-bold text-sm mb-3">3. Sostenibilidad y Calidad</h3>
+                        <ul id="breakdown-q3" class="space-y-2 text-xs text-ash-700 dark:text-ash-200">
+                            <li class="flex justify-between"><span>A. Muy positivo / sólido:</span> <strong id="q3-a">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>B. Positivo / ver durabilidad:</span> <strong id="q3-b">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>C. Indiferente (solo diseño):</span> <strong id="q3-c">0 (0%)</strong></li>
+                            <li class="flex justify-between"><span>D. Desconfía de residuos:</span> <strong id="q3-d">0 (0%)</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-4 sm:px-6 border-t border-ash-200 dark:border-ash-800 text-center text-xs text-ash-700 dark:text-ash-300">
+        <p class="font-semibold text-ash-900 dark:text-white">RHA Eco-Design • Proyecto Mortero Ecológico con Ceniza de Cascarilla de Arroz</p>
+        <p class="mt-1">Guayas y Los Ríos, Ecuador • Prototipo de Validación Comercial (Sesión 15)</p>
+    </footer>
+
+    <!-- Lógica JavaScript -->
+    <script>
+        const STORAGE_KEY = 'rha_ecodesign_validation_responses_v1';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwZSnvMacZ6_k6tLFkZcHVLH7n1Vmzlx5lzfLJ8dXphuXW79ofkpleo5Mdie5EIkK_8rg/exec';
+        let selectedProductLabel = 'Ninguno';
+        let dashboardVisible = true;
+// ... existing code ... -->
+        // 5. Manejo del envío del formulario conectado a Google Sheets y localStorage
+        document.getElementById('validation-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            submitBtn.disabled = true;
+            submitText.textContent = 'Enviando respuesta...';
+
+            const formData = new FormData(this);
+            const q1 = formData.get('q1');
+            const q2 = formData.get('q2');
+            const q3 = formData.get('q3');
+            const customPriceRaw = formData.get('customPrice');
+            const customPrice = customPriceRaw ? parseFloat(customPriceRaw) : null;
+
+            // Mapeo limpio para las fórmulas de la pestaña "Resumen" en Google Sheets
+            const q1SheetMap = {
+                'A': 'Cilíndrico Pintado ($7.00)',
+                'B': 'Kit DIY ($8.00 - con 3 potecitos de pintura y 1 pincel)',
+                'C': 'Hexagonal Natural ($5.00)',
+                'D': 'Ninguno por el momento'
+            };
+
+            const q2SheetMap = {
+                'A': 'Económico',
+                'B': 'Precio Justo',
+                'C': 'Costoso',
+                'D': 'Muy Costoso'
+            };
+
+            const q3SheetMap = {
+                'A': 'Sí, influye mucho',
+                'B': 'Influye moderadamente',
+                'C': 'Poco / Indiferente',
+                'D': 'Desconfía de residuos'
+            };
+
+            const comentariosTexto = [
+                selectedProductLabel !== 'Ninguno' ? `Interés catálogo: ${selectedProductLabel}` : null,
+                customPrice !== null && !isNaN(customPrice) ? `Precio sugerido: $${customPrice.toFixed(2)} USD` : null
+            ].filter(Boolean).join(' | ') || 'Sin comentarios';
+
+            const sheetsPayload = {
+                preferencia: q1SheetMap[q1] || q1,
+                precio: q2SheetMap[q2] || q2,
+                ecologico: q3SheetMap[q3] || q3,
+                comentarios: comentariosTexto
+            };
+
+            const newEntry = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString('es-EC'),
+                productoInteres: selectedProductLabel,
+                q1_preferencia: q1,
+                q2_precio: q2,
+                precioSugeridoUSD: customPrice,
+                q3_sostenibilidad: q3
+            };
+
+            // Guardar siempre en respaldo local
+            const responses = getResponses();
+            responses.push(newEntry);
+            saveResponses(responses);
+
+            // Enviar a Google Sheets mediante Google Apps Script
+            let sentToSheets = false;
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(sheetsPayload)
+                });
+                sentToSheets = true;
+            } catch (err) {
+                console.error('Error enviando datos a Google Sheets:', err);
+            }
+
+            // Resetear formulario, estado del botón y badge
+            this.reset();
+            selectedProductLabel = 'Ninguno';
+            document.getElementById('selected-badge').classList.add('hidden');
+            submitBtn.disabled = false;
+            submitText.textContent = 'Registrar Respuesta de Validación';
+
+            // Actualizar dashboard en vivo
+            updateDashboard();
+
+            if (sentToSheets) {
+                showToast('¡Respuesta registrada en Google Sheets y en el panel!', 'Los datos ya están disponibles en tu hoja de cálculo.');
+            } else {
+                showToast('Guardado en respaldo local', 'Sin conexión a Google Sheets; se guardó en este dispositivo.');
+            }
+        });
+
+        // 6. Cálculo de Métricas y Actualización del Dashboard en Vivo
+        function updateDashboard() {
+            const responses = getResponses();
+            const total = responses.length;
+
+            document.getElementById('nav-count').textContent = total;
+            document.getElementById('kpi-total').textContent = total;
+
+            // Contadores Q1
+            const q1Counts = { A: 0, B: 0, C: 0, D: 0 };
+            // Contadores Q2
+            const q2Counts = { A: 0, B: 0, C: 0, D: 0 };
+            // Contadores Q3
+            const q3Counts = { A: 0, B: 0, C: 0, D: 0 };
+
+            let priceSum = 0;
+            let priceCount = 0;
+
+            responses.forEach(r => {
+                if (q1Counts[r.q1_preferencia] !== undefined) q1Counts[r.q1_preferencia]++;
+                if (q2Counts[r.q2_precio] !== undefined) q2Counts[r.q2_precio]++;
+                if (q3Counts[r.q3_sostenibilidad] !== undefined) q3Counts[r.q3_sostenibilidad]++;
+                if (r.precioSugeridoUSD && !isNaN(r.precioSugeridoUSD)) {
+                    priceSum += r.precioSugeridoUSD;
+                    priceCount++;
+                }
+            });
+
+            const pct = (val) => total > 0 ? Math.round((val / total) * 100) : 0;
+
+            // KPI 2: Interés en Kit DIY (Q1 == B) -> Meta >= 30%
+            const diyPct = pct(q1Counts.B);
+            document.getElementById('kpi-diy').textContent = `${diyPct}%`;
+            document.getElementById('bar-diy').style.width = `${diyPct}%`;
+            const badgeDiy = document.getElementById('badge-diy');
+            if (total > 0 && diyPct >= 30) {
+                badgeDiy.textContent = '✓ Meta ≥30% Lograda';
+                badgeDiy.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300';
+            } else {
+                badgeDiy.textContent = 'Meta: ≥30%';
+                badgeDiy.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-ash-100 dark:bg-ash-700 text-ash-700 dark:text-ash-200';
+            }
+
+            // KPI 3: Factor Ecológico Influye Positivamente (Q3 == A o B) -> Meta >= 70%
+            const ecoPositiveCount = q3Counts.A + q3Counts.B;
+            const ecoPct = pct(ecoPositiveCount);
+            document.getElementById('kpi-eco').textContent = `${ecoPct}%`;
+            document.getElementById('bar-eco').style.width = `${ecoPct}%`;
+            const badgeEco = document.getElementById('badge-eco');
+            if (total > 0 && ecoPct >= 70) {
+                badgeEco.textContent = '✓ Meta ≥70% Lograda';
+                badgeEco.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300';
+            } else {
+                badgeEco.textContent = 'Meta: ≥70%';
+                badgeEco.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-ash-100 dark:bg-ash-700 text-ash-700 dark:text-ash-200';
+            }
+
+            // KPI 4: Percepción de Precio Justo / Adecuado (Q2 == A o B)
+            const fairPricePct = pct(q2Counts.A + q2Counts.B);
+            document.getElementById('kpi-price').textContent = `${fairPricePct}%`;
+            document.getElementById('kpi-avg-price').textContent = priceCount > 0 
+                ? `Precio sugerido prom.: $${(priceSum / priceCount).toFixed(2)} USD` 
+                : 'Precio sugerido prom.: --';
+
+            // Actualizar listas de desglose
+            ['A', 'B', 'C', 'D'].forEach(opt => {
+                const lower = opt.toLowerCase();
+                document.getElementById(`q1-${lower}`).textContent = `${q1Counts[opt]} (${pct(q1Counts[opt])}%)`;
+                document.getElementById(`q2-${lower}`).textContent = `${q2Counts[opt]} (${pct(q2Counts[opt])}%)`;
+                document.getElementById(`q3-${lower}`).textContent = `${q3Counts[opt]} (${pct(q3Counts[opt])}%)`;
+            });
+        }
+
+        // 7. Mostrar / Ocultar Dashboard
+        function toggleDashboard() {
+            const content = document.getElementById('dashboard-content');
+            const btn = document.getElementById('btn-toggle-dash');
+            const section = document.getElementById('dashboard-section');
+            
+            dashboardVisible = !dashboardVisible;
+            if (dashboardVisible) {
+                content.classList.remove('hidden');
+                btn.textContent = 'Ocultar Panel';
+                section.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                content.classList.add('hidden');
+                btn.textContent = 'Mostrar Panel';
+            }
+        }
+
+        // 8. Exportar Respuestas a CSV
+        function exportCSV() {
+            const responses = getResponses();
+            if (responses.length === 0) {
+                showToast('Sin datos para exportar', 'Aún no hay respuestas registradas en la encuesta.');
+                return;
+            }
+
+            const headers = [
+                'ID',
+                'Fecha_Hora',
+                'Producto_Preseleccionado',
+                'Q1_Preferencia_Presentacion',
+                'Q2_Percepcion_Precio',
+                'Precio_Sugerido_USD',
+                'Q3_Impacto_Sostenibilidad_Calidad'
+            ];
+
+            const rows = responses.map(r => [
+                r.id,
+                `"${r.timestamp}"`,
+                `"${r.productoInteres}"`,
+                r.q1_preferencia,
+                r.q2_precio,
+                r.precioSugeridoUSD !== null ? r.precioSugeridoUSD : '',
+                r.q3_sostenibilidad
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `validacion_RHA_EcoDesign_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast('Archivo CSV descargado', `Se exportaron ${responses.length} registros correctamente.`);
+        }
+
+        // 9. Reiniciar datos con confirmación en interfaz (sin alert/confirm)
+        function requestResetData() {
+            document.getElementById('reset-confirm-box').classList.remove('hidden');
+        }
+        function cancelResetData() {
+            document.getElementById('reset-confirm-box').classList.add('hidden');
+        }
+        function confirmResetData() {
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('reset-confirm-box').classList.add('hidden');
+            updateDashboard();
+            showToast('Datos reiniciados', 'El contador de encuestas volvió a 0.');
+        }
+
+        // Inicializar dashboard al cargar la página
+        window.addEventListener('DOMContentLoaded', updateDashboard);
+    </script>
+</body>
+</html>
